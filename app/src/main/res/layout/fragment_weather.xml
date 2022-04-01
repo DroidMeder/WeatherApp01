@@ -108,11 +108,10 @@
                         android:id="@+id/tv_is_sky_clear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:fontFamily="@font/barlow_medium"
                         android:letterSpacing="-0.05"
                         android:lineHeight="21.6dp"
-                        android:text="@string/sunny"
+                        android:text="njfbnffjnbfnbfkbf bbhbjjh hbhbhbmb"
                         android:textColor="@color/black"
                         android:textFontWeight="500"
                         android:textSize="18sp" />

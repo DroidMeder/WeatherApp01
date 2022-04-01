@@ -10,7 +10,8 @@ public interface WeatherAppApi {
 
     //https://api.openweathermap.org/data/2.5/weather?q=Sokuluk&appid=8f2532bd1258017112c5514cef4a7b8b&units=metric&lang=ru
     @GET("/data/2.5/weather?q=Bishkek&appid=8f2532bd1258017112c5514cef4a7b8b&units=metric&lang=ru")
-    Call<MainResponse> getWeatherInRussian();
+    Call<MainResponse> getWeatherInRussian
+    ();
 
     //Call<WeatherResponse> getCurrentWeatherData(@Query("lat") String lat, @Query("lon") String lon, @Query("APPID") String app_id);
 

@@ -30,13 +30,13 @@ public class MainResponse {
     private Clouds clouds;
     @SerializedName("dt")
     @Expose
-    private Integer dt;
+    private int dt;
     @SerializedName("sys")
     @Expose
     private Sys sys;
     @SerializedName("timezone")
     @Expose
-    private Integer timezone;
+    private int timezone;
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -103,11 +103,11 @@ public class MainResponse {
         this.clouds = clouds;
     }
 
-    public Integer getDt() {
+    public int getDt() {
         return dt;
     }
 
-    public void setDt(Integer dt) {
+    public void setDt(int dt) {
         this.dt = dt;
     }
 
@@ -119,11 +119,11 @@ public class MainResponse {
         this.sys = sys;
     }
 
-    public Integer getTimezone() {
+    public int getTimezone() {
         return timezone;
     }
 
-    public void setTimezone(Integer timezone) {
+    public void setTimezone(int timezone) {
         this.timezone = timezone;
     }
 

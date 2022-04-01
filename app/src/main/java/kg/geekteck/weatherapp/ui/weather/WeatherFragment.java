@@ -1,5 +1,6 @@
 package kg.geekteck.weatherapp.ui.weather;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -8,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +19,8 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
 import kg.geekteck.weatherapp.R;
@@ -34,9 +31,11 @@ import kg.geekteck.weatherapp.databinding.FragmentWeatherBinding;
 public class WeatherFragment extends Fragment {
     private FragmentWeatherBinding binding;
     private WeatherViewModel viewModel;
-    private int time= 0;
-    private int dayTime;
-    private int nightTime = 0;
+    private int time;
+    private int dayTime =1;
+    private int nightTime;
+    private int updatedAt;
+    private int localTime;
 
     public WeatherFragment() {
     }
@@ -51,7 +50,7 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentWeatherBinding.inflate(inflater, container, false);
-        if (time>=nightTime){
+        if (time<=nightTime){
             binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_night);
         }else {
             binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_day);
@@ -75,7 +74,7 @@ public class WeatherFragment extends Fragment {
                                 mainResponseResource.data.getDt();
                         nightTime = mainResponseResource.data.getSys().getSunset();
                         dayTime = mainResponseResource.data.getSys().getSunrise();
-                        if (time>=nightTime){
+                        if (time<=nightTime){
                             binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_night);
                         }else {
                             binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_day);
@@ -103,24 +102,35 @@ public class WeatherFragment extends Fragment {
         });
     }
 
+    int i=0;
+    private String getDate(long updatedAt, String dateFormat){
+
+        System.out.println(++i +"--=-----------=-==- "+updatedAt);
+
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(updatedAt);
+
+        System.out.println(format.format(calendar.getTime())+"!!!!!!!!!!!!!");
+        return format.format(calendar.getTime());
+    }
+
+    @SuppressLint("SetTextI18n")
     private void setViews(MainResponse mainResponse) {
-        int updatedAt = mainResponse.getDt(); //jsonObj.getLong(“dt”);
-        int localTime = mainResponse.getTimezone();
+        updatedAt = mainResponse.getDt();
+        localTime = mainResponse.getTimezone();
 
-        String updatedAtText = new SimpleDateFormat("E, dd MMM yyyy | HH:mm", Locale.ENGLISH).format(
-                new Date((updatedAt +localTime)*1000l));
-
-        binding.tvDayDateTime.setText(updatedAtText);
+        binding.tvDayDateTime.setText(getDate((updatedAt+localTime)* 1000L, "E, dd MMM yyyy | HH:mm a"));
         binding.tvLocation.setText(mainResponse.getName().toString()+", "
                 +mainResponse.getSys().getCountry().toString());
 
         String url = "http://openweathermap.org/img/wn/"+mainResponse.getWeather().get(0).getIcon()+"@2x.png";
-        Uri uri = Uri.parse(url);
+
         Glide.with(binding.getRoot())
-                .load(uri)
+                .load(url)
                 .centerCrop()
                 .into(binding.ivIsSkyClear);
-        binding.tvIsSkyClear.setText(mainResponse.getWeather().get(0).getDescription());
+        binding.tvIsSkyClear.setText(mainResponse.getWeather().get(0).getMain());
 
         binding.tvTemperature1.setText(String.format("%s", mainResponse.getMain().getTemp()));
 
@@ -134,21 +144,16 @@ public class WeatherFragment extends Fragment {
 
         binding.tvWind.setText(String.format("%s km/h", mainResponse.getWind().getSpeed()));
 
-        Integer date =  mainResponse.getSys().getSunrise();
-        String updatedAtText1 = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(
-                new Date(date * 1000));
-        binding.tvSunrise.setText(updatedAtText1);
+        binding.tvSunrise.setText(getDate((mainResponse.getSys().getSunrise()
+                +localTime)*1000L, "hh:mm a"));
 
-        date =  mainResponse.getSys().getSunset();
-        updatedAtText1 = new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(
-                new Date(date * 1000));
-        binding.tvSunset.setText(updatedAtText1);
+        binding.tvSunset.setText(getDate((mainResponse.getSys().getSunset()
+                +localTime)*1000L, "hh:mm a"));
 
 
-        date = mainResponse.getSys().getSunset()-mainResponse.getSys().getSunrise();
-        updatedAtText1 = new SimpleDateFormat("hh m", Locale.ENGLISH).format(
-                new Date(date * 1000));
-        String[] hours = updatedAtText1.split(" ");
+        long date3 = (mainResponse.getSys().getSunset()-mainResponse.getSys().getSunrise())*1000L;
+        String rawFormat = getDate(date3, "HH m");
+        String []hours =rawFormat.split(" ");
         binding.tvDaytime.setText(hours[0]+"h "+hours[1]+"m");
     }
 }

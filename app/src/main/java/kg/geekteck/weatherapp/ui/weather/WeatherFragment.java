@@ -140,7 +140,7 @@ public class WeatherFragment extends Fragment {
         String str = String.format("%s", mainResponse.getMain().getHumidity());
         binding.tvHumidity.setText(str+"%");
 
-        binding.tvBarometer.setText(String.format("%s mBar", mainResponse.getMain().getPressure()));
+        binding.tvBarometer.setText(String.format("%s mBar", mainResponse.getMain().getPressure()/1000f));
 
         binding.tvWind.setText(String.format("%s km/h", mainResponse.getWind().getSpeed()));
 

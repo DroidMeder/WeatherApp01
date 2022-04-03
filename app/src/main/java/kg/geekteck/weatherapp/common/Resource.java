@@ -27,6 +27,4 @@ public class Resource<T> {
     public static <T> Resource<T> loading() {
         return new Resource<>(Status.LOADING, null, null);
     }
-
-
 }

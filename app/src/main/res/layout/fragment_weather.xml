@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.weather.WeatherFragment">
 
     <ImageView
@@ -18,6 +19,7 @@
         android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:elevation="8dp"
         android:background="@drawable/corner"
         app:layout_constraintBottom_toBottomOf="@id/iv_background">
 
@@ -34,6 +36,7 @@
                 android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="true"
                 android:fontFamily="@font/barlow_medium"
                 android:lineHeight="19.2dp"
                 android:text="@string/mumbai_india"
@@ -71,6 +74,8 @@
         android:id="@+id/cl_weather"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,18 +83,18 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="10dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:id="@+id/line_is_sky_clear"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -111,7 +116,7 @@
                         android:fontFamily="@font/barlow_medium"
                         android:letterSpacing="-0.05"
                         android:lineHeight="21.6dp"
-                        android:text="njfbnffjnbfnbfkbf bbhbjjh hbhbhbmb"
+                        android:text="hiuh"
                         android:textColor="@color/black"
                         android:textFontWeight="500"
                         android:textSize="18sp" />
@@ -144,10 +149,10 @@
                         android:id="@+id/tv_temperature2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
                         android:fontFamily="@font/barlow_medium"
                         android:lineHeight="28.8dp"
                         android:text="@string/c"
-                        android:textAlignment="gravity"
                         android:textColor="@color/gray"
                         android:textFontWeight="500"
                         android:textSize="24sp" />
@@ -159,8 +164,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:paddingHorizontal="15dp"
                     android:orientation="vertical"
+                    android:paddingHorizontal="15dp"
                     android:visibility="visible">
 
                     <LinearLayout
@@ -191,8 +196,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:layout_marginTop="12dp"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <TextView
@@ -484,6 +489,24 @@
                 </LinearLayout>
 
             </TableRow>
+
+            <LinearLayout
+                android:id="@+id/line_rec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recForecast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_cities" />
+
+            </LinearLayout>
 
         </TableLayout>
 

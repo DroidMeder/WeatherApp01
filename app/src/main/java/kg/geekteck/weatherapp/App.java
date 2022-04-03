@@ -18,7 +18,7 @@ public class App extends Application {
         client = new RetrofitClient();
         api=client.provideApi();
         repository = new Repository(api);//, "8f2532bd1258017112c5514cef4a7b8b",
-              // "metric", "ru");
+        // "metric", "ru");
     }
     //8f2532bd1258017112c5514cef4a7b8b&units=metric&lang=ru
 }

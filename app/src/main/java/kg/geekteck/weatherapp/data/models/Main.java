@@ -8,16 +8,16 @@ public class Main {
 
     @SerializedName("temp")
     @Expose
-    private Double temp;
+    private double temp;
     @SerializedName("feels_like")
     @Expose
     private Double feelsLike;
     @SerializedName("temp_min")
     @Expose
-    private Double tempMin;
+    private double tempMin;
     @SerializedName("temp_max")
     @Expose
-    private Double tempMax;
+    private double tempMax;
     @SerializedName("pressure")
     @Expose
     private Integer pressure;
@@ -31,8 +31,8 @@ public class Main {
     @Expose
     private Integer grndLevel;
 
-    public Double getTemp() {
-        return temp;
+    public int getTemp() {
+        return (int) temp;
     }
 
     public void setTemp(Double temp) {
@@ -47,16 +47,16 @@ public class Main {
         this.feelsLike = feelsLike;
     }
 
-    public Double getTempMin() {
-        return tempMin;
+    public int getTempMin() {
+        return (int) tempMin;
     }
 
     public void setTempMin(Double tempMin) {
         this.tempMin = tempMin;
     }
 
-    public Double getTempMax() {
-        return tempMax;
+    public int getTempMax() {
+        return (int) tempMax;
     }
 
     public void setTempMax(Double tempMax) {

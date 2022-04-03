@@ -9,5 +9,18 @@
         android:id="@+id/weatherFragment"
         android:name="kg.geekteck.weatherapp.ui.weather.WeatherFragment"
         android:label="fragment_weather"
-        tools:layout="@layout/fragment_weather" />
+        tools:layout="@layout/fragment_weather" >
+        <action
+            android:id="@+id/action_weatherFragment_to_selectCityFragment"
+            app:destination="@id/selectCityFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectCityFragment"
+        android:name="kg.geekteck.weatherapp.ui.cityselect.SelectCityFragment"
+        android:label="fragment_select_city"
+        tools:layout="@layout/fragment_select_city" >
+        <action
+            android:id="@+id/action_selectCityFragment_to_weatherFragment"
+            app:destination="@id/weatherFragment" />
+    </fragment>
 </navigation>

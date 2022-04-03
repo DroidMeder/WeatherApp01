@@ -14,4 +14,6 @@
     <string name="sunset">Sunset</string>
     <string name="sunrise">Sunrise</string>
     <string name="daytime">Daytime</string>
+    <string name="select">Введите город</string>
+    <string name="chose">Нажмите на город</string>
 </resources>

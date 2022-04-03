@@ -1,9 +1,13 @@
 package kg.geekteck.weatherapp.data.remote;
 
+import java.util.List;
+
 import kg.geekteck.weatherapp.data.models.MainResponse;
+import kg.geekteck.weatherapp.data.models.citynames.CityResponse;
+import kg.geekteck.weatherapp.data.models.citynames.MyResponse;
+import kg.geekteck.weatherapp.data.models.forecast.ForecastResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface WeatherAppApi {
@@ -15,11 +19,27 @@ public interface WeatherAppApi {
 
     //Call<WeatherResponse> getCurrentWeatherData(@Query("lat") String lat, @Query("lon") String lon, @Query("APPID") String app_id);
 
-  /*  @GET("/data/2.5/weather?")
-    Call<MainResponse> getWeatherInRussian(@Query("city name") String city,
-            @Query("APPID") String app_id,
+    @GET("/data/2.5/weather")
+    Call<MainResponse> getWeatherInRussianByCityName(
+            @Query("q") String city,
+            @Query("appid") String app_id,
             @Query("units") String units,
             @Query("lang") String lang);
-*/
+
+    ///geo/1.0/direct?q=London&limit=5&appid=8f2532bd1258017112c5514cef4a7b8b&lang=ru
+    @GET("/geo/1.0/direct")
+    Call<List<MyResponse>> getCitiesName(
+            @Query("q") String city,
+            @Query("limit") String limit,
+            @Query("appid") String app_id,
+            @Query("lang") String lang);
+
+
+    @GET("/data/2.5/forecast")
+    Call<ForecastResponse> getForecast(
+            @Query("q") String city,
+            @Query("appid") String app_id,
+            @Query("units") String units,
+            @Query("lang") String lang);
 
 }

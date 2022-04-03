@@ -5,8 +5,13 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import kg.geekteck.weatherapp.data.models.citynames.CityResponse;
+
 public class MainResponse {
 
+    @SerializedName("city")
+    @Expose
+    private CityResponse city;
     @SerializedName("coord")
     @Expose
     private Coord coord;
@@ -151,4 +156,11 @@ public class MainResponse {
         this.cod = cod;
     }
 
+    public CityResponse getCity() {
+        return city;
+    }
+
+    public void setCity(CityResponse city) {
+        this.city = city;
+    }
 }

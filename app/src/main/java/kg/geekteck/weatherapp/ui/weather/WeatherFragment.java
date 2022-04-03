@@ -21,21 +21,25 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import kg.geekteck.weatherapp.R;
+import kg.geekteck.weatherapp.base.BaseFragment;
 import kg.geekteck.weatherapp.common.Resource;
 import kg.geekteck.weatherapp.data.models.MainResponse;
+import kg.geekteck.weatherapp.data.models.forecast.ForecastResponse;
 import kg.geekteck.weatherapp.databinding.FragmentWeatherBinding;
 
-public class WeatherFragment extends Fragment {
-    private FragmentWeatherBinding binding;
+public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
     private WeatherViewModel viewModel;
     private int time;
     private int dayTime =1;
     private int nightTime;
     private int updatedAt;
     private int localTime;
+    private String city;
+    private WeatherForecastAdapter adapter;
 
     public WeatherFragment() {
     }
@@ -43,60 +47,106 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        adapter=new WeatherForecastAdapter();
         viewModel = new ViewModelProvider(requireActivity()).get(WeatherViewModel.class);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentWeatherBinding.inflate(inflater, container, false);
-        if (time<=nightTime){
-            binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_night);
-        }else {
-            binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_day);
-        }
-        return binding.getRoot();
+    protected FragmentWeatherBinding bind() {
+        return FragmentWeatherBinding.inflate(getLayoutInflater());
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-       // binding.rvWeather.setAdapter(adapter);
-        viewModel.getWeather();
-        viewModel.liveData.observe(getViewLifecycleOwner(), new Observer<Resource<MainResponse>>() {
+    protected void setupViews() {
+        Bundle bundle = getArguments();
+        System.out.println("=-=-=-="+bundle);
+        //bundle=getArguments();
+        //city = bundle.getString("Key");
+        if (bundle!=null){
+            city= bundle.getString("Key");
+        }else {
+            city="Bishkek";
+        }
+        binding.recForecast.setAdapter(adapter);
+    }
+
+    @Override
+    protected void callRequests() {
+        viewModel.getWeatherByCityName(city);
+        viewModel.getForecast(city);
+    }
+
+    @Override
+    protected void setupListener() {
+        binding.tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(Resource<MainResponse> mainResponseResource) {
-                switch (mainResponseResource.status){
-                    case SUCCESS:{
-                        binding.clWeather.setVisibility(View.VISIBLE);
-                        binding.progress.setVisibility(View.GONE);
-                        time = mainResponseResource.data.getTimezone() +
-                                mainResponseResource.data.getDt();
-                        nightTime = mainResponseResource.data.getSys().getSunset();
-                        dayTime = mainResponseResource.data.getSys().getSunrise();
-                        if (time<=nightTime){
-                            binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_night);
-                        }else {
-                            binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_day);
-                        }
-                        setViews(mainResponseResource.data);
-                        //adapter.setMainResponseList(mainResponseResource.data.g);
-                        System.out.println("Success--------------");
-                        break;
+            public void onClick(View view) {
+                navController.navigate(R.id.action_weatherFragment_to_selectCityFragment);
+            }
+        });
+    }
+
+    @Override
+    protected void setupObserver() {
+        System.out.println("====== observer  ===");
+        viewModel.liveData.observe(getViewLifecycleOwner(), mainResponseResource -> {
+            switch (mainResponseResource.status){
+                case SUCCESS:{
+                    binding.clWeather.setVisibility(View.VISIBLE);
+                    binding.progress.setVisibility(View.GONE);
+                    time = mainResponseResource.data.getTimezone() +
+                            mainResponseResource.data.getDt();
+                    nightTime = mainResponseResource.data.getSys().getSunset();
+                    dayTime = mainResponseResource.data.getSys().getSunrise();
+                    if (time<=nightTime){
+                        binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_night);
+                    }else {
+                        binding.ivBackground.setImageResource(R.drawable.ic_graphic_city_day);
                     }
-                    case ERROR: {
-                        binding.clWeather.setVisibility(View.GONE);
-                        binding.progress.setVisibility(View.GONE);
-                        Snackbar.make(binding.getRoot(), mainResponseResource.msc,
-                                BaseTransientBottomBar.LENGTH_LONG)
-                                .show();
-                        break;
-                    }
-                    case LOADING: {
-                        binding.clWeather.setVisibility(View.GONE);
-                        binding.progress.setVisibility(View.VISIBLE);
-                        break;
-                    }
+                    setViews(mainResponseResource.data);
+                    //adapter.setMainResponseList(mainResponseResource.data.g);
+                    System.out.println("Success--------------");
+                    break;
+                }
+                case ERROR: {
+                    binding.clWeather.setVisibility(View.GONE);
+                    binding.progress.setVisibility(View.GONE);
+                    System.out.println("======"+mainResponseResource.msc);
+                    Snackbar.make(binding.getRoot(), mainResponseResource.msc,
+                            BaseTransientBottomBar.LENGTH_LONG)
+                            .show();
+                    break;
+                }
+                case LOADING: {
+                    binding.clWeather.setVisibility(View.GONE);
+                    binding.progress.setVisibility(View.VISIBLE);
+                    System.out.println("======Loading "+mainResponseResource.msc);
+                    break;
+                }
+            }
+        });
+
+        viewModel.liveDataForecast.observe(getViewLifecycleOwner(), mainResponseResource -> {
+            switch (mainResponseResource.status){
+                case SUCCESS:{
+                    //setViews(mainResponseResource.data);
+                    adapter.setLisOfCities(mainResponseResource.data.getList());
+                    adapter.setCity(mainResponseResource.data.getCity());
+                    System.out.println("Success--------------");
+                    break;
+                }
+                case ERROR: {
+                    System.out.println("======"+mainResponseResource.msc);
+
+                    Snackbar.make(binding.getRoot(), mainResponseResource.msc,
+                            BaseTransientBottomBar.LENGTH_LONG)
+                            .show();
+                    break;
+                }
+                case LOADING: {
+                    System.out.println("======Loading "+mainResponseResource.msc);
+
+                    break;
                 }
             }
         });

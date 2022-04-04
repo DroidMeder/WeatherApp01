@@ -7,12 +7,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private OkHttpClient client = new OkHttpClient.Builder()
+    private final OkHttpClient client = new OkHttpClient.Builder()
             .addInterceptor(new HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY))
             .build();
 
-    private Retrofit retrofit = new Retrofit.Builder()
+    private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://api.openweathermap.org")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)

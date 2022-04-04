@@ -29,7 +29,8 @@ public interface WeatherAppApi {
 
     @GET("/data/2.5/forecast")
     Call<ForecastResponse> getForecast(
-            @Query("q") String city,
+            @Query("lat") String lat,
+            @Query("lon") String lon,
             @Query("appid") String app_id,
             @Query("units") String units,
             @Query("lang") String lang);

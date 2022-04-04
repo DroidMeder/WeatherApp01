@@ -78,10 +78,10 @@ public class Repository {
         return liveData;
     }
 
-    public MutableLiveData<Resource<ForecastResponse>> getForecast(String city){
+    public MutableLiveData<Resource<ForecastResponse>> getForecast(String lat, String lon){
         MutableLiveData<Resource<ForecastResponse>> liveData = new MutableLiveData<>();
         liveData.setValue(Resource.loading());
-        api.getForecast(city, appIdKey, units, lang).enqueue(new Callback<ForecastResponse>() {
+        api.getForecast(lat, lon, appIdKey, units, lang).enqueue(new Callback<ForecastResponse>() {
             @Override
             public void onResponse(@NonNull Call<ForecastResponse> call,
                                    @NonNull Response<ForecastResponse> response) {

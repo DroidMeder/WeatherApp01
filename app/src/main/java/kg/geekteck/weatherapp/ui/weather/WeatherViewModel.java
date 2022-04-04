@@ -27,8 +27,8 @@ public class WeatherViewModel extends ViewModel {
         liveData = repository.getWeatherInRussianByCityName(lat, lon);
     }
 
-    public void getForecast(String city){
-        liveDataForecast = repository.getForecast(city);
+    public void getForecast(String lat, String lon){
+        liveDataForecast = repository.getForecast(lat, lon);
     }
 
 }

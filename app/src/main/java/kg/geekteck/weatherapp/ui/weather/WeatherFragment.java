@@ -57,7 +57,7 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
     protected void callRequests() {
         String[] cord = city.split(":");
         viewModel.getWeatherByCityName(cord[0], cord[1]);
-        viewModel.getForecast(cord[2]);
+        viewModel.getForecast(cord[0], cord[1]);
     }
 
     @Override

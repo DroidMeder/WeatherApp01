@@ -1,11 +1,18 @@
 package kg.geekteck.weatherapp.di;
 
+import android.app.Application;
+import android.content.Context;
+
+import androidx.room.Room;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
+import kg.geekteck.weatherapp.data.local.AppDatabase;
+import kg.geekteck.weatherapp.data.local.WeatherDao;
 import kg.geekteck.weatherapp.data.remote.WeatherAppApi;
 import kg.geekteck.weatherapp.data.repositories.Repository;
 import okhttp3.OkHttpClient;
@@ -44,8 +51,7 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    public static Repository provideRepository(WeatherAppApi api){
+    public static Repository provideApiRepository(WeatherAppApi api){
         return new Repository(api);
     }
-
 }

@@ -14,7 +14,7 @@
             android:name="n"
             app:argType="string"
             app:nullable="true"
-            android:defaultValue="42.8765615:74.6070079:Bishkek"/>
+            android:defaultValue="42.8766:74.607:Bishkek"/>
         <action
             android:id="@+id/action_weatherFragment_to_selectCityFragment"
             app:destination="@id/selectCityFragment" />

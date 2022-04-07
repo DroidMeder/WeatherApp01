@@ -2,21 +2,27 @@ package kg.geekteck.weatherapp.ui.cityselect;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import kg.geekteck.weatherapp.common.OnItemClick;
+import kg.geekteck.weatherapp.data.models.citynames.LocalNames;
 import kg.geekteck.weatherapp.data.models.citynames.MyResponse;
+import kg.geekteck.weatherapp.data.models.room.CityName;
 import kg.geekteck.weatherapp.databinding.ItemCitiesNamesBinding;
 
 public class SelectCityAdapter extends RecyclerView.Adapter<SelectCityAdapter.CityHolder> {
     private List<MyResponse> lisOfCities = new ArrayList<>();
     private OnItemClick<String> itemClick;
+    String lat = null;
+    String lon = null;
 
     public void setItemClick(OnItemClick<String> itemClick) {
         this.itemClick = itemClick;
@@ -36,10 +42,17 @@ public class SelectCityAdapter extends RecyclerView.Adapter<SelectCityAdapter.Ci
     @Override
     public void onBindViewHolder(@NonNull CityHolder holder, int position) {
         holder.onBind(lisOfCities.get(position));
-        holder.itemView.setOnClickListener(view ->
-                itemClick.buttonClick(lisOfCities.get(holder.getAdapterPosition()).getLat() + ":"
-                        + lisOfCities.get(holder.getAdapterPosition()).getLon() + ":"
-                        + lisOfCities.get(holder.getAdapterPosition()).getName()));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lat = new DecimalFormat("#.####")
+                        .format(lisOfCities.get(holder.getAdapterPosition()).getLat());
+                lon = new DecimalFormat("#.####")
+                        .format(lisOfCities.get(holder.getAdapterPosition()).getLon());
+                itemClick.buttonClick(lat + ":" + lon + ":"
+                        + lisOfCities.get(holder.getAdapterPosition()).getName());
+            }
+        });
     }
 
     @Override
@@ -59,6 +72,33 @@ public class SelectCityAdapter extends RecyclerView.Adapter<SelectCityAdapter.Ci
         notifyDataSetChanged();
     }
 
+    public void setListOfCity(List<CityName> data) {
+        System.out.println(";;;;;;;" + data.size());
+        lisOfCities = converter(data);
+        notifyDataSetChanged();
+    }
+
+    private List<MyResponse> converter(List<CityName> data) {
+        List<MyResponse> list = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            MyResponse myResponse = new MyResponse();
+            List<LocalNames> localNames = new ArrayList<>();
+            LocalNames names = new LocalNames();
+            myResponse.setLat(data.get(i).getLat());
+            myResponse.setLon(data.get(i).getLon());
+            myResponse.setName(data.get(i).getName());
+            myResponse.setCountry(data.get(i).getCountry());
+            myResponse.setState(data.get(i).getState());
+            names.setFeatureName(data.get(i).getFeatureName());
+            names.setKy(data.get(i).getNameKg());
+            names.setEn(data.get(i).getNameEn());
+            names.setRu(data.get(i).getNameRu());
+            myResponse.setLocalNames(names);
+            list.add(myResponse);
+        }
+        return list;
+    }
+
     protected static class CityHolder extends RecyclerView.ViewHolder {
         private final ItemCitiesNamesBinding binding;
 
@@ -76,7 +116,7 @@ public class SelectCityAdapter extends RecyclerView.Adapter<SelectCityAdapter.Ci
                 binding.tvLocalName.setText("Оригинальное название города: " + cityResponse
                         .getLocalNames().getFeatureName());
                 binding.tvNames.setText("Назание города на на кыргызском: " + cityResponse
-                        .getLocalNames().getEn()
+                        .getLocalNames().getKy()
                         + "\n на англиском: " + cityResponse.getLocalNames().getEn()
                         + "\n на русском: " + cityResponse.getLocalNames().getRu());
             } catch (Exception e) {

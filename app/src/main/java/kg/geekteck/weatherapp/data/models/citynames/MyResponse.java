@@ -42,16 +42,16 @@ public class MyResponse {
         this.localNames = localNames;
     }
 
-    public String getLat() {
-        return String.valueOf(lat);
+    public double getLat() {
+        return lat;
     }
 
     public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public String getLon() {
-        return String.valueOf(lon);
+    public double getLon() {
+        return lon;
     }
 
     public void setLon(double lon) {

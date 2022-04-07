@@ -1,6 +1,8 @@
 
 package kg.geekteck.weatherapp.data.models;
 
+import androidx.room.Entity;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -127,7 +129,7 @@ public class MainResponse {
         this.timezone = timezone;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 

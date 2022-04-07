@@ -158,14 +158,19 @@ public class SelectCityFragment extends BaseFragment<FragmentSelectCityBinding> 
                             System.out.println("lat=="+mainResponseResource.data.getLat());
                             System.out.println("lon=="+ mainResponseResource.data.getLon());
                             System.out.println("***********end2***********");
-                            CityName cityName = new CityName(mainResponseResource.data.getLat(),
-                                    mainResponseResource.data.getLon(), mainResponseResource.data.getName(),
-                                    s1,
-                                    mainResponseResource.data.getCountry(), mainResponseResource.data.getState(),
-                                    mainResponseResource.data.getLocalNames().getFeatureName(),
-                                    mainResponseResource.data.getLocalNames().getEn(),
-                                    mainResponseResource.data.getLocalNames().getKy(),
-                                    mainResponseResource.data.getLocalNames().getRu());
+                            CityName cityName = null;
+                            try {
+                                cityName = new CityName(mainResponseResource.data.getLat(),
+                                        mainResponseResource.data.getLon(), mainResponseResource.data.getName(),
+                                        s1,
+                                        mainResponseResource.data.getCountry(), mainResponseResource.data.getState(),
+                                        mainResponseResource.data.getLocalNames().getFeatureName(),
+                                        mainResponseResource.data.getLocalNames().getEn(),
+                                        mainResponseResource.data.getLocalNames().getKy(),
+                                        mainResponseResource.data.getLocalNames().getRu());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             System.out.println("city---SLF----" + cityName.getName());
                             if (isNetwork) {
                                 model.setLocalCitiesName(cityName);

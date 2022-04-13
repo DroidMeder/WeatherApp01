@@ -1,7 +1,6 @@
 package kg.geekteck.weatherapp.di;
 
 import android.app.Application;
-import android.content.Context;
 
 import androidx.room.Room;
 
@@ -51,7 +50,24 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    public static Repository provideApiRepository(WeatherAppApi api){
-        return new Repository(api);
+    public static AppDatabase provideDatabase(Application context){
+        return Room.databaseBuilder(context.getApplicationContext(),
+                AppDatabase.class, "weather")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+    }
+
+    @Provides
+    @Singleton
+    public static WeatherDao provideDoa(AppDatabase database){
+        System.out.println("3333 AMWD 3333"+database.newsDao().toString());
+        return database.newsDao();
+    }
+
+    @Provides
+    @Singleton
+    public static Repository provideApiRepository(WeatherAppApi api, WeatherDao dao){
+        return new Repository(api, dao);
     }
 }

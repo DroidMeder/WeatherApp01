@@ -15,9 +15,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import kg.geekteck.weatherapp.data.models.forecast.City;
-import kg.geekteck.weatherapp.data.models.forecast.Main;
-import kg.geekteck.weatherapp.data.models.forecast.Weather;
-import kg.geekteck.weatherapp.data.models.room.ForecastWeather;
 import kg.geekteck.weatherapp.databinding.ItemCitiesBinding;
 
 public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecastAdapter.ForecastHolder> {
@@ -58,35 +55,6 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
     @Override
     public int getItemCount() {
         return 5;
-    }
-
-    public void setListOfCity(List<ForecastWeather> data) {
-        city.setTimezone(data.get(0).getTimeZone());
-        lisOfCities = corvertToList(data);
-    }
-
-    private List<kg.geekteck.weatherapp.data.models.forecast.List>
-    corvertToList(List<ForecastWeather> data) {
-        List<kg.geekteck.weatherapp.data.models.forecast.List> list = new ArrayList<>();
-        kg.geekteck.weatherapp.data.models.forecast.List lili = null;
-        List<Weather> weathers = null;
-        Weather weather = null;
-        Main main = null;
-        for (int i = 0; i < data.size(); i++) {
-            lili=new kg.geekteck.weatherapp.data.models.forecast.List();
-            weathers=new ArrayList<>();
-            weather = new Weather();
-            main = new Main();
-            lili.setDt(data.get(i).getDate());
-            weather.setIcon(data.get(i).getIconUrl());
-            weathers.add(weather);
-            lili.setWeather(weathers);
-            main.setTempMax(data.get(i).getMaxTemp());
-            main.setTempMin(data.get(i).getMinTemp());
-            lili.setMain(main);
-            list.add(lili);
-        }
-        return list;
     }
 
     protected static class ForecastHolder extends RecyclerView.ViewHolder{

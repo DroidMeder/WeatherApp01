@@ -12,10 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 import kg.geekteck.weatherapp.common.Resource;
 import kg.geekteck.weatherapp.data.models.MainResponse;
 import kg.geekteck.weatherapp.data.models.forecast.ForecastResponse;
-import kg.geekteck.weatherapp.data.models.room.CityName;
-import kg.geekteck.weatherapp.data.models.room.CurrentWeather;
-import kg.geekteck.weatherapp.data.models.room.ForecastWeather;
-import kg.geekteck.weatherapp.data.repositories.DaoRepository;
 import kg.geekteck.weatherapp.data.repositories.Repository;
 
 @HiltViewModel
@@ -23,19 +19,14 @@ public class WeatherViewModel extends ViewModel {
 
     public LiveData<Resource<MainResponse>> liveData;
     public LiveData<Resource<ForecastResponse>> liveDataForecast;
-    public LiveData<Resource<ForecastWeather>> liveDataSetLocalForecast;
-    public LiveData<Resource<CurrentWeather>> liveDataSetLocalCurrent;
-    public LiveData<Resource<List<ForecastWeather>>> liveDataGetLocalForecast;
-    public LiveData<Resource<List<CurrentWeather>>> liveDataGetLocalCurrent;
+    public LiveData<Resource<List<MainResponse>>> liveDataGetLocalCurrent;
 
 
     private Repository repository;
-    private DaoRepository daoRepository;
 
     @Inject
-    public WeatherViewModel(Repository repository, DaoRepository daoRepository) {
+    public WeatherViewModel(Repository repository) {
         this.repository = repository;
-        this.daoRepository = daoRepository;
     }
 
     //region remote
@@ -46,46 +37,26 @@ public class WeatherViewModel extends ViewModel {
     public void getForecast(String lat, String lon){
         liveDataForecast = repository.getForecast(lat, lon);
     }
-    //endregion
-    //region local
-    //region set
-    public void setLocalCurrentWeather(CurrentWeather citiesWeather){
-        System.out.println(citiesWeather.getLat()+" 11 WVM--CW 11111111");
-        liveDataSetLocalCurrent = daoRepository.setLocalCurrentWeather(citiesWeather);
-        //System.out.println(daoRepository.+"11 WVM--CW 11111111");
 
-    }
-
-    public void setLocalForecastWeather(ForecastWeather forecastWeather){
-        System.out.println(forecastWeather.getLat()+"11 WVM -- FW 11111111");
-        liveDataSetLocalForecast = daoRepository.setLocalForecastWeather(forecastWeather);
-    }
-    //endregion
-    //region get
-    public void getLocalCurrentWeather(String lat, String lon){
-        System.out.println("666 WVM glcw 6666666"+lat+lon);
-        liveDataGetLocalCurrent = daoRepository.getLocalCurrentWeather(lat, lon);
+    public void getLocalCurrentWeather(int id){
+        System.out.println("666 WVM glcw 6666666 "+id);
+        liveDataGetLocalCurrent = repository.getLocalFilteredMainResponse(id);
         try {
             System.out.println("66   wvm glcw 66 ======"+
                     Objects.requireNonNull(liveDataGetLocalCurrent.getValue()).data.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("666 wvm glcw 6666666 "+daoRepository.getLocalCurrentWeather(lat,lon));
+        System.out.println("666 wvm glcw 6666666 "+repository.getLocalFilteredMainResponse(id));
     }
 
-    public void getLocalForecastWeather(String lat, String lon){
-        System.out.println("666 wvm glfw 6666666 "+lat+lon);
-        liveDataGetLocalForecast = daoRepository.getLocalForecastWeather(lat, lon);
+    public void getLocalLastMainResponse(){
+        liveDataGetLocalCurrent = repository.getLocalSortedMainResponse();
         try {
-            System.out.println("66   wvm glfw 66 ======"+
-                    Objects.requireNonNull(liveDataGetLocalForecast.getValue()).data);
+            System.out.println("66   wvm glcw 66 ======"+
+                    Objects.requireNonNull(liveDataGetLocalCurrent.getValue()).data.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("666 wvm glfw 6666666 "+daoRepository.getLocalForecastWeather(lat,lon).toString());
     }
-    //endregion
-    //endregion
-
 }

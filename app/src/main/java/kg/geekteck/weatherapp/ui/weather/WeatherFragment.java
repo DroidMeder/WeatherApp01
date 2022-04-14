@@ -1,6 +1,9 @@
 package kg.geekteck.weatherapp.ui.weather;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,7 +18,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import kg.geekteck.weatherapp.ConnectionDetector;
+import kg.geekteck.weatherapp.MainActivity2;
 import kg.geekteck.weatherapp.R;
 import kg.geekteck.weatherapp.base.BaseFragment;
 import kg.geekteck.weatherapp.data.models.MainResponse;
@@ -26,9 +29,6 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
     private WeatherViewModel viewModel;
     private WeatherForecastAdapter adapter;
     private WeatherFragmentArgs args;
-    private ConnectionDetector cd;
-
-    private boolean isNetwork = false;
     private int time;
     private long nightTime;
     private String city;
@@ -42,7 +42,6 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cd = new ConnectionDetector(requireContext().getApplicationContext());
         adapter = new WeatherForecastAdapter();
         args = WeatherFragmentArgs.fromBundle(getArguments());
         viewModel = new ViewModelProvider(requireActivity()).get(WeatherViewModel.class);
@@ -67,14 +66,19 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
 
     @Override
     protected void callRequests() {
-        if (city.equals("42")){
-            //city= MainActivity2.userLocation;
+        if (city.equals("423")){
+            if (MainActivity2.userLocation!=null){
+                city=MainActivity2.userLocation;
+            }
         }
-        System.out.println("____________"+city);
-        cord = city.split(":");
-        if (cord.length>1) {
-            viewModel.getWeatherByCityName(cord[0], cord[1]);
+        System.out.println("___WF__*split*_______"+city);
+        if (city!=null) {
+            cord = city.split(":");
+            if (cord.length>1) {
+                viewModel.getWeatherByCityName(cord[0], cord[1]);
+            }
         }
+
     }
 
     @Override
@@ -88,35 +92,15 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
     @Override
     protected void setupObserver() {
         System.out.println("====== observer WF  ===");
-        if (viewModel.liveData!=null && viewModel.liveDataForecast!=null) {
-            viewModel.liveDataForecast.observe(
-                    getViewLifecycleOwner(), fR ->
-                    {
-                        switch (fR.status) {
-                            case SUCCESS: {
-                                adapter.setLisOfCities(fR.data.getList());
-                                adapter.setCity(fR.data.getCity());
-                                System.out.println("Success--WF1------------");
-                                break;
-                            }
-                            case ERROR: {
-                                System.out.println("===WF1===" + fR.msc);
-                                Snackbar.make(binding.getRoot(), fR.msc,
-                                        BaseTransientBottomBar.LENGTH_LONG)
-                                        .show();
-                                break;
-                            }
-                            case LOADING: {
-                                System.out.println("===WF1====Loading " + fR.msc);
-                                break;
-                            }
-                        }
-                    });
-
-            //region main response or current weather
+        //region main response or current weather
+        if (viewModel.liveData!=null) {
+            System.out.println("Get Main response -------WF-----");
             viewModel.liveData.observe(getViewLifecycleOwner(), mR -> {
                 switch (mR.status) {
                     case SUCCESS: {
+                        System.out.println("Success------WF--GMR------");
+                        getForecast(getDate((mR.data.getDt()+mR.data.getTimezone())*1000L,
+                                "HH"));
                         binding.clWeather.setVisibility(View.VISIBLE);
                         binding.progress.setVisibility(View.GONE);
                         time = mR.data.getTimezone() +
@@ -137,11 +121,11 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
                         break;
                     }
                     case ERROR: {
-                        isNetwork = cd.ConnectingToInternet();
                         binding.clWeather.setVisibility(View.GONE);
                         binding.progress.setVisibility(View.GONE);
                         System.out.println("Error==WF==CW==" + mR.msc);
-                        if (!isNetwork) {
+                        if (!checkInternetConnection()) {
+                            System.out.println("Error==WF==CW=loadLocal=");
                             try {
                                 getCurrentWeatherFromRoom();
                             } catch (Exception e) {
@@ -161,12 +145,63 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
                     }
                 }
             });
-            //endregion
-        }  else{
-            System.out.println("no internet");
+        } else {
+            System.out.println("---***Weather view model is empty***---");
             getCurrentWeatherFromRoom();
         }
+        //endregion
+    }
 
+    private void getForecast(String dt) {
+        if (cord.length>1) {
+            viewModel.getForecast(cord[0], cord[1]);
+        }
+        //region forecast
+        if (viewModel.liveDataForecast!=null) {
+            System.out.println("Get Forecast response -------WF-----");
+            viewModel.liveDataForecast.observe(
+                    getViewLifecycleOwner(), fR ->
+                    {
+                        switch (fR.status) {
+                            case SUCCESS: {
+                                adapter.setLisOfCities(fR.data.getList());
+                                adapter.setDate(dt);
+                                System.out.println("Success--WF1------------");
+                                break;
+                            }
+                            case ERROR: {
+                                System.out.println("===WF1===" + fR.msc);
+                                if (!checkInternetConnection()) {
+                                    System.out.println("Error==WF==CW=loadLocal=");
+                                    try {
+                                        getLocalForecastFromRoom(dt);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                Snackbar.make(binding.getRoot(), fR.msc,
+                                        BaseTransientBottomBar.LENGTH_LONG)
+                                        .show();
+                                break;
+                            }
+                            case LOADING: {
+                                System.out.println("===WF1====Loading " + fR.msc);
+                                break;
+                            }
+                        }
+                    });
+        }  else{
+            System.out.println("----***Forecast view model is empty***----");
+            getLocalForecastFromRoom(dt);
+        }
+        //endregion
+    }
+
+    public boolean checkInternetConnection() {
+        ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        return (activeNetworkInfo != null && activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected());
     }
 
     private void getCurrentWeatherFromRoom() {
@@ -181,10 +216,19 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
                 cR -> {
                     switch (cR.status) {
                         case SUCCESS: {
+                            System.out.println("Success--WF-----LCW-------");
+                            try {
+                                getForecast(getDate((cR.data.get(0).getDt()
+                                                +cR.data.get(0).getTimezone())*1000L,
+                                        "HH"));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            binding.clWeather.setVisibility(View.VISIBLE);
+                            binding.progress.setVisibility(View.GONE);
                             if (cR.data.size() > 0 && cR.data!=null) {
                                 setViews(cR.data.get(0));
                             }
-                            System.out.println("Success--WF-----LCW-------");
                             break;
                         }
                         case ERROR: {
@@ -197,9 +241,41 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
                             break;
                         }
                         case LOADING: {
+                            System.out.println("===WF==LCW==Loading " + cR.msc);
                             binding.clWeather.setVisibility(View.GONE);
                             binding.progress.setVisibility(View.VISIBLE);
-                            System.out.println("===WF==LCW==Loading " + cR.msc);
+                            break;
+                        }
+                    }
+                });
+    }
+ private void getLocalForecastFromRoom(String dt) {
+        if (cord.length>3){
+            System.out.println("____wf__lff___Yeas");
+            viewModel.getLocalForecastById();
+        }else {
+            System.out.println("__wf__llf_____Neeuuu");
+            viewModel.getLocalLastForecast();
+        }
+        viewModel.liveDataGetLocalForecast.observe(getViewLifecycleOwner(),
+                fR -> {
+                    switch (fR.status) {
+                        case SUCCESS: {
+                            System.out.println("Success--WF-----Lf-------"+fR.data.size());
+                            try {
+                                adapter.setLisOfCities(fR.data);
+                                adapter.setDate(dt);
+                            } catch (Exception e) {
+                                System.out.println("----S wf--- lf"+e);
+                            }
+                            break;
+                        }
+                        case ERROR: {
+                            System.out.println("Error==WF==Lf==" + fR.msc);
+                            break;
+                        }
+                        case LOADING: {
+                            System.out.println("===WF==Lf==Loading " + fR.msc);
                             break;
                         }
                     }
@@ -223,7 +299,7 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
 
     @SuppressLint("SetTextI18n")
     private void setViews(MainResponse mainResponse) {
-        System.out.println(mainResponse.getSys().getCountry()+" lllllll");
+        System.out.println(mainResponse.getSys().getCountry()+" --*start setting views*--");
         updatedAt = mainResponse.getDt();
         localTime = mainResponse.getTimezone();
 
@@ -241,10 +317,13 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
                 .into(binding.ivIsSkyClear);
         binding.tvIsSkyClear.setText(mainResponse.getWeather().get(0).getMain());
 
-        binding.tvTemperature1.setText(String.format("%s", mainResponse.getMain().getTemp()));
+        int temp= (int) mainResponse.getMain().getTemp();
+        int maxTemp = (int) mainResponse.getMain().getTempMax();
+        int minTemp = (int) mainResponse.getMain().getTempMin();
 
-        binding.tvMaxTemp.setText(String.format("%s", mainResponse.getMain().getTempMax()));
-        binding.tvMinTemp.setText(String.format("%s", mainResponse.getMain().getTempMin()));
+        binding.tvTemperature1.setText(String.valueOf(temp));
+        binding.tvMaxTemp.setText(String.valueOf(maxTemp));
+        binding.tvMinTemp.setText(String.valueOf(minTemp));
 
         String str = String.format("%s", mainResponse.getMain().getHumidity());
         binding.tvHumidity.setText(str + "%");
@@ -259,11 +338,10 @@ public class WeatherFragment extends BaseFragment<FragmentWeatherBinding> {
         binding.tvSunset.setText(getDate((mainResponse.getSys().getSunset()
                 + localTime) * 1000L, "hh:mm a"));
 
-
         long date3 = (mainResponse.getSys().getSunset() - mainResponse.getSys().getSunrise()) * 1000L;
         String rawFormat = getDate(date3, "HH m");
         String[] hours = rawFormat.split(" ");
         binding.tvDaytime.setText(hours[0] + "h " + hours[1] + "m");
-        System.out.println(mainResponse.getMain().getTemp()+" lllllll");
+        System.out.println(mainResponse.getMain().getTemp()+"-- *end setting views*--");
     }
 }

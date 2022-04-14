@@ -38,11 +38,11 @@ public class Main {
     @Ignore
     private Double feelsLike;
 
-    public Integer getTemp() {
-        return (int) temp;
+    public double getTemp() {
+        return temp;
     }
 
-    public void setTemp(Double temp) {
+    public void setTemp(double temp) {
         this.temp = temp;
     }
 
@@ -54,35 +54,35 @@ public class Main {
         this.feelsLike = feelsLike;
     }
 
-    public Integer getTempMin() {
-        return (int) tempMin;
+    public double getTempMin() {
+        return tempMin;
     }
 
-    public void setTempMin(Double tempMin) {
+    public void setTempMin(double tempMin) {
         this.tempMin = tempMin;
     }
 
-    public Integer getTempMax() {
-        return (int) tempMax;
+    public double getTempMax() {
+        return tempMax;
     }
 
-    public void setTempMax(Double tempMax) {
+    public void setTempMax(double tempMax) {
         this.tempMax = tempMax;
     }
 
-    public Integer getPressure() {
+    public int getPressure() {
         return pressure;
     }
 
-    public void setPressure(Integer pressure) {
+    public void setPressure(int pressure) {
         this.pressure = pressure;
     }
 
-    public Integer getHumidity() {
+    public int getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Integer humidity) {
+    public void setHumidity(int humidity) {
         this.humidity = humidity;
     }
 

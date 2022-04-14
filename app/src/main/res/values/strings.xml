@@ -3,11 +3,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sunny">sunny</string>
-    <string name="_33">33</string>
+    <string name="_33">---</string>
     <string name="c">\u00B0C</string>
-    <string name="_35_u00b0c">35°C</string>
-    <string name="mumbai_india">Mumbai, India</string>
-    <string name="sunday_19_may_2019_4_30pm">Sunday, 19 May 2019 | 4:30PM</string>
+    <string name="_35_u00b0c">---°C</string>
+    <string name="mumbai_india">No data!!!</string>
+    <string name="sunday_19_may_2019_4_30pm">There is no data in a db!!!</string>
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
     <string name="wind">Wind</string>
@@ -16,4 +16,9 @@
     <string name="daytime">Daytime</string>
     <string name="select">Введите город</string>
     <string name="chose">Нажмите на город</string>
+    <string name="checkedtextview">CheckedTextView</string>
+    <string name="find">Определение место положения</string>
+    <string name="ask">Отменить геолокацию?\n И загузить из сохраненных данных?</string>
+    <string name="try_again">Или \n Попробовать заново?</string>
+    <string name="opps_n_n">Opps!!! \n Що та ни так! \n Що та ни так!\n? ? ?</string>
 </resources>

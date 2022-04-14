@@ -9,6 +9,7 @@ import androidx.room.Query;
 import java.util.List;
 
 import kg.geekteck.weatherapp.data.models.MainResponse;
+import kg.geekteck.weatherapp.data.models.forecast.ForecastResponse;
 
 @Dao
 public interface WeatherDao {
@@ -27,6 +28,21 @@ public interface WeatherDao {
 
     @Query("SELECT * FROM mainresponse WHERE id=:id")
     List<MainResponse> getCurrentById(int id);
-    //endregion
+
+    //forecast
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertForecast(kg.geekteck.weatherapp.data.models.forecast.List list);
+
+    @Delete
+    void deleteForecast(List<kg.geekteck.weatherapp.data.models.forecast.List> forecastWeather);
+
+    @Query("SELECT * FROM list")
+    List<kg.geekteck.weatherapp.data.models.forecast.List> getAllForecast();
+
+    @Query("SELECT * FROM list WHERE createdAt = :dt")
+    List<kg.geekteck.weatherapp.data.models.forecast.List> getForecastByDt(long dt);
+
+    @Query("SELECT * FROM list  ORDER BY createdAt DESC")
+    List<kg.geekteck.weatherapp.data.models.forecast.List> getAllForecastSorted();
 
 }

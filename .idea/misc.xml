@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/drawable-v24/cab_1.xml" value="0.1" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/drawable-v24/cab_2.xml" value="0.187" />
         <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/drawable/corner.xml" value="0.216" />
         <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/drawable/corner1.xml" value="0.216" />
         <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/drawable/ic_baseline_delete.xml" value="0.1355" />
         <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/drawable/shape.xml" value="0.1935" />
-        <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/layout/activity_main2.xml" value="0.2046875" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.22567287784679088" />
+        <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/layout/activity_main2.xml" value="0.2" />
         <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/layout/fragment_list_weather.xml" value="0.2046875" />
         <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/layout/fragment_select_city.xml" value="0.264" />
         <entry key="..\:/Users/ASUS/AndroidStudioProjects/Geek/WeatherApp/app/src/main/res/layout/fragment_weather.xml" value="0.2" />

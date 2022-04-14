@@ -36,13 +36,13 @@ public class SelectCityFragment extends BaseFragment<FragmentSelectCityBinding>
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("___________onCreate");
+        System.out.println("_____Map______onCreate");
 
     }
 
     @Override
     protected FragmentSelectCityBinding bind() {
-        System.out.println("___________bind");
+        System.out.println("______Map_____bind");
 
         return FragmentSelectCityBinding.inflate(getLayoutInflater());
     }
@@ -50,11 +50,11 @@ public class SelectCityFragment extends BaseFragment<FragmentSelectCityBinding>
     //region base methods
     @Override
     protected void setupViews() {
-        System.out.println("___________SetupViews");
+        System.out.println("________Map___SetupViews");
         FragmentManager fm =getChildFragmentManager();/// getChildFragmentManager();
         supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.google_map);
         if (supportMapFragment == null) {
-            System.out.println("___________SetupViews1");
+            System.out.println("______Map_____SetupViews1");
 
             supportMapFragment = SupportMapFragment.newInstance();
             fm.beginTransaction().replace(R.id.google_map, supportMapFragment).commit();
@@ -72,11 +72,11 @@ public class SelectCityFragment extends BaseFragment<FragmentSelectCityBinding>
     private void setupMapListener() {
 
         if (gMap!=null){
-            System.out.println("___________setupMapListener");
+            System.out.println("______Map_____setupMapListener");
             gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(@NonNull LatLng latLng) {
-                    System.out.println("___click________setupMapListener");
+                    System.out.println("___click____Map____setupMapListener");
                     MarkerOptions marker = new MarkerOptions();
                     marker.position(latLng);
                     marker.draggable(true);
@@ -98,8 +98,8 @@ public class SelectCityFragment extends BaseFragment<FragmentSelectCityBinding>
             gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(@NonNull Marker marker) {
-                    System.out.println("===== lat "+marker.getPosition().latitude);
-                    System.out.println("===== lon "+marker.getPosition().longitude);
+                    System.out.println("===Map== lat "+marker.getPosition().latitude);
+                    System.out.println("==Map=== lon "+marker.getPosition().longitude);
                     String data = marker.getPosition().latitude+":"
                             +marker.getPosition().longitude;
                     navController.navigate(SelectCityFragmentDirections
@@ -143,7 +143,7 @@ public class SelectCityFragment extends BaseFragment<FragmentSelectCityBinding>
     }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        System.out.println("__________onMapReady");
+        System.out.println("____Map______onMapReady");
         gMap = googleMap;
         setupMapListener();
     }

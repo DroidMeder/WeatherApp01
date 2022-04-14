@@ -36,4 +36,3 @@ public class WeatherConverter implements Serializable {
         return productCategoriesList;
     }
 }
-

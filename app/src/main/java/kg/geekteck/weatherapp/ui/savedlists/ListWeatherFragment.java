@@ -65,23 +65,20 @@ public class ListWeatherFragment extends BaseFragment<FragmentListWeatherBinding
     protected void setupObserver() {
         viewModel.getLocalCurrentWeather();
         viewModel.liveDataGetLocalCurrent.observe(getViewLifecycleOwner(),
-                new Observer<Resource<List<MainResponse>>>() {
-                    @Override
-                    public void onChanged(Resource<List<MainResponse>> cR) {
-                        switch (cR.status) {
-                            case SUCCESS: {
-                                adapter.setList(cR.data);
-                                System.out.println("Success--LWF-----LCW-------");
-                                break;
-                            }
-                            case ERROR: {
-                                System.out.println("Error==LWF==LCW==" + cR.msc);
-                                break;
-                            }
-                            case LOADING: {
-                                System.out.println("===LWF==LCW==Loading " + cR.msc);
-                                break;
-                            }
+                cR -> {
+                    switch (cR.status) {
+                        case SUCCESS: {
+                            adapter.setList(cR.data);
+                            System.out.println("Success--LWF-----LCW-------");
+                            break;
+                        }
+                        case ERROR: {
+                            System.out.println("Error==LWF==LCW==" + cR.msc);
+                            break;
+                        }
+                        case LOADING: {
+                            System.out.println("===LWF==LCW==Loading " + cR.msc);
+                            break;
                         }
                     }
                 });

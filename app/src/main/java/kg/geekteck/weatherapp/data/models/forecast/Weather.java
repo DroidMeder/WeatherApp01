@@ -1,23 +1,29 @@
 
 package kg.geekteck.weatherapp.data.models.forecast;
 
+import androidx.room.Ignore;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Weather {
-
-    @SerializedName("id")
-    @Expose
-    private long id;
-    @SerializedName("main")
-    @Expose
-    private String main;
-    @SerializedName("description")
-    @Expose
-    private String description;
     @SerializedName("icon")
     @Expose
     private String icon;
+
+    @Ignore
+    @SerializedName("id")
+    @Expose
+    private long id;
+    @Ignore
+    @SerializedName("main")
+    @Expose
+    private String main;
+    @Ignore
+    @SerializedName("description")
+    @Expose
+    private String description;
+
 
     public long getId() {
         return id;

@@ -22,7 +22,6 @@ public class ListWeatherFragment extends BaseFragment<FragmentListWeatherBinding
 
 
     public ListWeatherFragment() {
-        // Required empty public constructor
     }
 
 

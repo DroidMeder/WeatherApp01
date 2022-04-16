@@ -51,12 +51,7 @@ class ListWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else {
             ((VH2) holder).bind2(list.get(position));
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clicked.click(list.get(position));
-            }
-        });
+        holder.itemView.setOnClickListener(v -> clicked.click(list.get(position)));
     }
 
     @Override
